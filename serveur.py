@@ -1,4 +1,6 @@
+import csv
 from dataclasses import dataclass
+import os
 from typing import Any, Dict, Optional
 
 """
@@ -22,7 +24,53 @@ class PDU_Reponse:
     data: Optional[Dict[str, str]]
     token: Optional[Dict[str, str]]
 
-#Fonctions Utilitaires
+# ------ Fonctions Utilitaires ------
+
+
+def user_exists(username: str) -> bool:
+    """
+    Vérifie si un utilisateur existe déjà dans le fichier users.csv
+    Retourne True si trouvé, False sinon
+    """
+
+    try:
+        with open("users.csv", mode="r", newline="") as fichier:
+            lecteur = csv.DictReader(fichier)
+            for ligne in lecteur:
+                if ligne.get("username") == username:
+                    return True
+    except FileNotFoundError:
+        # Si le fichier n'existe pas encore, aucun utilisateur n'existe
+        return False
+
+    return False
+
+
+def add_user(username: str, password: str, role: str) -> None:
+    """
+    Ajoute un utilisateur dans le fichier users.csv
+    """
+
+    champs = ["username", "password", "role"]
+
+    try:
+        # Si le fichier existe, le curseur est placé à la fin
+        with open("users.csv", mode="a", newline="") as fichier:
+            writer = csv.DictWriter(fichier, fieldnames=champs)
+
+            # Si le fichier est vide, écrire l'en-tête
+            if fichier.tell() == 0:
+                writer.writeheader()
+
+            writer.writerow({
+                "username": username,
+                "password": password,
+                "role": role
+            })
+
+    except Exception:
+        # Laisser l'exception remonter vers CREATE_USER
+        raise
 
 def pdu_400(token):
     '''
@@ -74,7 +122,7 @@ def est_administrateur(token):
         return False
     return token.get("role") == "administrateur"
 
-#Fonctions de commandes 
+# ----- Fonctions de commandes ------ 
 
 def CREATE_USER(pdu_recu: PDU_Requete) -> PDU_Reponse:
 
@@ -104,11 +152,19 @@ def CREATE_USER(pdu_recu: PDU_Requete) -> PDU_Reponse:
 
     # Étape 4 : création
     with open(f"annuaire_{data['username']}.csv", "w"):
-        add_user(
+        try:
+            add_user(
             username=data["username"],
             password=data["password"],
             role=data["role"]
         )
+        except: 
+            return PDU_Reponse(
+            status=500,
+            message="Erreur côté serveur",
+            data=None,
+            token=token
+        ) 
     # Étape 5 : succès
     return PDU_Reponse(
         status=201,
