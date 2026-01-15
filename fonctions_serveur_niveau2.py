@@ -23,26 +23,27 @@ class PDU_Reponse:
 # ------ Fonctions Utilitaires ------
 
 
-def user_exists(username: str) -> bool:
+def user_exists(username: str, filename: str) -> bool:
     """
     Vérifie si un utilisateur existe déjà dans le fichier users.csv
     Retourne True si trouvé, False sinon
     """
-
     try:
-        with open("users.csv", mode="r", newline="") as fichier:
+        with open(filename, mode="r", newline="") as fichier: 
             lecteur = csv.DictReader(fichier)
             for ligne in lecteur:
+                print(ligne.get("username"))
                 if ligne.get("username") == username:
                     return True
     except FileNotFoundError:
+        print("Fichier " + filename + " pas trouvé")
         # Si le fichier n'existe pas encore, aucun utilisateur n'existe
         return False
 
     return False
 
 
-def add_user(username: str, password: str, role: str) -> None:
+def add_user(username: str, password: str, role: str, filename: str) -> None:
     """
     Ajoute un utilisateur dans le fichier users.csv
     """
@@ -51,7 +52,7 @@ def add_user(username: str, password: str, role: str) -> None:
 
     try:
         # Si le fichier existe, le curseur est placé à la fin
-        with open("users.csv", mode="a", newline="") as fichier:
+        with open(filename, mode="a", newline="") as fichier:
             writer = csv.DictWriter(fichier, fieldnames=champs)
 
             # Si le fichier est vide, écrire l'en-tête

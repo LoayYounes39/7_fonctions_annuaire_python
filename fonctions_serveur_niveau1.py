@@ -35,7 +35,7 @@ def CREATE_USER(pdu_recu: PDU_Requete) -> PDU_Reponse:
         return pdu_400(token)
 
     # Étape 3 : unicité de l'utilisateur
-    if user_exists(data["username"]):
+    if user_exists(data["username"], "users.csv"):
         return pdu_409(token)
 
     # Étape 4 : création
@@ -44,7 +44,8 @@ def CREATE_USER(pdu_recu: PDU_Requete) -> PDU_Reponse:
             add_user(
             username=data["username"],
             password=data["password"],
-            role=data["role"]
+            role=data["role"], 
+            filename="users.csv"
         )
         except: 
             return PDU_Reponse(
