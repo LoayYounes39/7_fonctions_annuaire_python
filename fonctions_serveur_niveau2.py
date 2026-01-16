@@ -1,5 +1,6 @@
 import csv
 from dataclasses import dataclass
+import hashlib
 from typing import Dict, Optional
 
 
@@ -11,14 +12,14 @@ from typing import Dict, Optional
 class PDU_Requete:
     action: str
     data: Optional[Dict[str, str]]
-    token: Optional[Dict[str, str]]
+    token: Dict[str, str]
 
 @dataclass
 class PDU_Reponse:
     status: int
     message: str
     data: Optional[Dict[str, str]]
-    token: Optional[Dict[str, str]]
+    token: Dict[str, str]
 
 # ------ Fonctions Utilitaires ------
 
@@ -29,11 +30,10 @@ def user_exists(username: str, filename: str) -> bool:
     Retourne True si trouvé, False sinon
     """
     try:
-        with open(filename, mode="r", newline="") as fichier: 
+        with open(filename, mode="r", encoding='utf-8') as fichier: 
             lecteur = csv.DictReader(fichier)
             for ligne in lecteur:
-                print(ligne.get("username"))
-                if ligne.get("username") == username:
+                if ligne['username'] == username:
                     return True
     except FileNotFoundError:
         print("Fichier " + filename + " pas trouvé")
@@ -47,24 +47,21 @@ def add_user(username: str, password: str, role: str, filename: str) -> None:
     """
     Ajoute un utilisateur dans le fichier users.csv
     """
-
-    champs = ["username", "password", "role"]
-
-    try:
-        # Si le fichier existe, le curseur est placé à la fin
-        with open(filename, mode="a", newline="") as fichier:
-            writer = csv.DictWriter(fichier, fieldnames=champs)
-
-            # Si le fichier est vide, écrire l'en-tête
-            if fichier.tell() == 0:
-                writer.writeheader()
-
-            writer.writerow({
-                "username": username,
-                "password": password,
-                "role": role
-            })
-
+    salt = 'u39'
+    pwd_salt = password + salt 
+    pwd_hashed = hashlib.sha256(pwd_salt.encode())
+    try: 
+        with open(filename, 'w+', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            reader = csv.reader(f)
+            rows = list(reader)
+            if (len(rows) == 0):
+                writer.writerow(('username', 'password', 'role'))
+            writer.writerow((
+                username,
+                pwd_hashed.hexdigest(),
+                role
+            ))
     except Exception:
         # Laisser l'exception remonter vers CREATE_USER
         raise

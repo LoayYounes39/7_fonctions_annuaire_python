@@ -1,10 +1,2 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2822
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-
-\f0\fs24 \cf0 username;password;role\
-Loay;Loay123456;client\
-thanina;Thanina123456;client}Amir,1234,client
+username,password,role
+Amir,ac4ddfffd7077e61885da6c5adbd4d4084b6b9b1edc6d42d9b69015545d332b2,client
