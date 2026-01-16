@@ -23,8 +23,8 @@ def CREATE_USER(pdu_recu: PDU_Requete) -> PDU_Reponse:
 
     '''
 
-    token = pdu_recu["token"]
-    data = pdu_recu["data"]
+    token = pdu_recu.token
+    data = pdu_recu.data
 
     # Étape 1 : autorisation
     if not est_administrateur(token):
@@ -42,25 +42,14 @@ def CREATE_USER(pdu_recu: PDU_Requete) -> PDU_Reponse:
     # Étape 4 : création
     with open(f"annuaire_{data['username']}.csv", "w"):
         try:
-            add_user(
-            username=data["username"],
-            password=data["password"],
-            role=data["role"], 
-            filename="users.csv"
-        )
+            nom = data["username"]
+            mdp = data["password"]
+            role = data["role"]
+            nom_fic = 'users.csv'
+            add_user(nom, mdp, role, nom_fic )
         except: 
-            return PDU_Reponse(
-            status=500,
-            message="Erreur côté serveur",
-            data=None,
-            token=token
-        ) 
+           return pdu_500(token)
     # Étape 5 : succès
-    return PDU_Reponse(
-        status=201,
-        message="Utilisateur créé avec succès",
-        data=None,
-        token=token
-    )
+    return pdu_201(token)
 
 

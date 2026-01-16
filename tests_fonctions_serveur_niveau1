@@ -1,0 +1,57 @@
+from fonctions_serveur_niveau1 import *
+from fonctions_serveur_niveau2 import *
+
+def test_create_user(): 
+
+    assert CREATE_USER(
+    PDU_Requete(
+        action="CREATE_USER",
+        data={
+            "username": "Loay",
+            "password": "Loay123456",
+            "role": "client"
+        },
+        token = "USER_TOKEN"
+    )
+    ) == pdu_403("USER_TOKEN")
+
+    assert CREATE_USER(
+    PDU_Requete(
+        action="CREATE_USER",
+        data={
+            "username": "Loay",
+            "password": "Loay123456",
+            "role": ""
+        },
+        token = "ADMIN_TOKEN"
+    )
+    ) == pdu_400("ADMIN_TOKEN")
+
+    pdu_create = CREATE_USER( PDU_Requete(
+        action="CREATE_USER",
+        data={
+            "username": "Loay",
+            "password": "Loay123456",
+            "role": "administrateur"
+        },
+        token = "ADMIN_TOKEN"
+    ) )
+    assert pdu_create == pdu_201("ADMIN_TOKEN") 
+
+    assert CREATE_USER(
+    PDU_Requete(
+        action="CREATE_USER",
+        data={
+            "username": "Loay",
+            "password": "Loay123456",
+            "role": "administrateur"
+        },
+        token = "ADMIN_TOKEN"
+    )
+    ) == pdu_409("ADMIN_TOKEN")
+
+if __name__ == "__main__":
+    test_create_user()
+    print("Test OK")
+
+

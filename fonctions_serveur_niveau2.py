@@ -6,20 +6,22 @@ from typing import Dict, Optional
 
 "Le module de serveur niveau 2 a les différentes fonctions auxiliaires déclarées en serveur niveau 1 "
 
-#Définition des types de PDU dans un style d'enregistrement en C 
-#data et token sont des dictionnaires car ils ont des champs
+#Définition des types de PDU dans des classes 
+#car car cela correspond le plus au diagramme 
+#aussi les data sont optionnels (peuvent être nul) => je me suis servi de GPT dans les classes
+
 @dataclass
 class PDU_Requete:
     action: str
     data: Optional[Dict[str, str]]
-    token: Dict[str, str]
+    token: str
 
 @dataclass
 class PDU_Reponse:
     status: int
     message: str
     data: Optional[Dict[str, str]]
-    token: Dict[str, str]
+    token: str
 
 # ------ Fonctions Utilitaires ------
 
@@ -99,6 +101,21 @@ def pdu_409(token):
         token=token
     )
 
+def pdu_500(token):
+     return PDU_Reponse(
+            status=500,
+            message="Erreur côté serveur",
+            data=None,
+            token=token )
+
+def pdu_201(token):
+   return PDU_Reponse(
+        status=201,
+        message="Utilisateur créé avec succès",
+        data=None,
+        token=token
+    )
+
 def sont_donnees_utilisateur_invalides(data, champs_obligatoires):
     if data is None:
         return True
@@ -112,6 +129,4 @@ def sont_donnees_utilisateur_invalides(data, champs_obligatoires):
     return False
 
 def est_administrateur(token):
-    if token is None:
-        return False
-    return token.get("role") == "administrateur"
+    return token == "ADMIN_TOKEN"

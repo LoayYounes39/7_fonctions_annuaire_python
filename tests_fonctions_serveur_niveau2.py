@@ -39,8 +39,8 @@ def test_sont_donnees_utilisateur_invalides():
 
 def test_est_administrateur(): 
     print("test_est_administrateur")
-    assert(est_administrateur({"role":None}) == False)
-    assert(est_administrateur({"role":"administrateur"} ) == True)
+    assert(est_administrateur(None) == False)
+    assert(est_administrateur("ADMIN_TOKEN") == True)
     print("test ok")
 
 if __name__ == "__main__":
