@@ -10,6 +10,7 @@ une action est faite niveau modification dans la base de donnée (les fichiers C
 ...
 """
 
+CURRENT_USER = "Loay"
 
 # ----- Fonctions de commandes ------ 
 
@@ -37,7 +38,7 @@ def CREATE_USER(pdu_recu: PDU_Requete) -> PDU_Reponse:
 
     # Étape 3 : unicité de l'utilisateur
     if user_exists(data["username"], "users.csv"):
-        return pdu_409(token)
+        return pdu_409(token, "utilisateur déjà existant")
 
     # Étape 4 : création
     with open(f"annuaire_{data['username']}.csv", "w"):
@@ -68,6 +69,18 @@ def ADD_CONTACT(pdu_recu: PDU_Requete) -> PDU_Reponse:
     
     if not verifier_champs_obligatoires(data): 
         return pdu_400(token)
-
     
+    
+    if not est_Annuaire_Partage(data, CURRENT_USER): 
+        return pdu_403(token, f" Tu n'as pas accès à {data["nomAnnuaire"]}" )
+
+    if contact_exists(data["username"], f"annuaire_{data["nomAnnuaire"]}.csv"): 
+        return pdu_409(token, "contact déjà existant")
+    
+    try: 
+        ajouter_contact(pdu_recu.data, f"annuaire_{data["nomAnnuaire"]}.csv" )
+    except: 
+        return pdu_500(token)
+    
+    return pdu_201(token, "contact ajouté par succès")
     

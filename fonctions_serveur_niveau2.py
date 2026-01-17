@@ -41,7 +41,6 @@ def user_exists(username: str, filename: str) -> bool:
         print("Fichier " + filename + " pas trouvé")
         # Si le fichier n'existe pas encore, aucun utilisateur n'existe
         return False
-
     return False
 
 
@@ -90,13 +89,13 @@ def pdu_403(token, message):
         token=token
     )
 
-def pdu_409(token):
+def pdu_409(token, message):
     '''
     Erreur 409 Conflit (utilisateur existant)
     '''
     return PDU_Reponse(
         status=409,
-        message="Utilisateur déjà existant",
+        message=message,
         data=None,
         token=token
     )
@@ -108,10 +107,10 @@ def pdu_500(token):
             data=None,
             token=token )
 
-def pdu_201(token):
+def pdu_201(token, message):
    return PDU_Reponse(
         status=201,
-        message="Utilisateur créé avec succès",
+        message=message,
         data=None,
         token=token
     )
@@ -144,3 +143,16 @@ def pdu_401(token):
 
 def verifier_champs_obligatoires(data): 
     return data["nom"] != "" and data["prenom"] != "" and data["adresseMail"] != "" and data["nomAnnuaire"] != ""
+
+def est_Annuaire_Partage(data, current_user):
+    nomAnnuaire = data["nomAnnuaire"]
+    est_Permis = False
+    with open("droits.csv", "r", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f, delimiter=";")
+        #print("Colonnes disponibles:", reader.fieldnames)
+        for ligne in reader:
+           #print("Ligne:", ligne)  # Pour voir le contenu
+            if ligne["utilisateur"] == nomAnnuaire:
+                tab_permis = ligne["utilisateursPermis"].split(",")
+                est_Permis = current_user in tab_permis
+    return est_Permis

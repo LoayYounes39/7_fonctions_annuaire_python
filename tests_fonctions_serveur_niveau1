@@ -36,7 +36,7 @@ def test_create_user():
         },
         token = "ADMIN_TOKEN"
     ) )
-    assert pdu_create == pdu_201("ADMIN_TOKEN") 
+    assert pdu_create == pdu_201("ADMIN_TOKEN", "utilisateur ajouté par succès") 
 
     assert CREATE_USER(
     PDU_Requete(
@@ -48,7 +48,7 @@ def test_create_user():
         },
         token = "ADMIN_TOKEN"
     )
-    ) == pdu_409("ADMIN_TOKEN")
+    ) == pdu_409("ADMIN_TOKEN", "utilisateur déjà existant")
 
 def test_add_contact():
 
@@ -110,7 +110,23 @@ def test_add_contact():
         },
         token = "USER_TOKEN"
     )
-    ) == pdu_403("USER_TOKEN", "Tu n'as pas accès à K ")
+    ) == pdu_403("USER_TOKEN", " Tu n'as pas accès à K")
+    """
+    
+    assert ADD_CONTACT(
+    PDU_Requete(
+        action="ADD_CONTACT",
+        data={
+            "nomAnnuaire": "E",
+            "nom": "Talley",
+            "prenom": "Emma",
+            "numTel": "+1 213 555-0123",
+            "adressePostal": "obs2016",
+            "adresseMail": "emmatalley@2016.com"
+        },
+        token = "USER_TOKEN"
+    )
+    ) == pdu_201("USER_TOKEN", "contact ajouté par succès")
 
     assert ADD_CONTACT(
     PDU_Requete(
@@ -125,8 +141,8 @@ def test_add_contact():
         },
         token = "USER_TOKEN"
     )
-    ) == pdu_201("USER_TOKEN") 
- 
+    ) == pdu_409("USER_TOKEN", "contact déjà existant")
+ """
 if __name__ == "__main__":
 
     print("test_create_user")

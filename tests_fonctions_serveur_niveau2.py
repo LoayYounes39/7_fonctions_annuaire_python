@@ -43,12 +43,19 @@ def test_est_administrateur():
     assert(est_administrateur("ADMIN_TOKEN") == True)
     print("test ok")
 
-
+def test_est_Annuaire_Partage(): 
+    print("test_est_Annuaire_Partage")
+    pdu1 = PDU_Requete("ADD_CONTACT", {"nomAnnuaire": "B"},"USER_TOKEN" )
+    assert(est_Annuaire_Partage(pdu1.data, "Loay") == False )
+    pdu2 = PDU_Requete("ADD_CONTACT", {"nomAnnuaire": "E"}, "USER_TOKEN")
+    assert(est_Annuaire_Partage(pdu2.data, "Loay") == True )
+    print("test ok")
 
 if __name__ == "__main__":
     test_add_user()
     test_user_exists()
     test_sont_donnees_utilisateur_invalides()
     test_est_administrateur()
+    test_est_Annuaire_Partage()
     
     
