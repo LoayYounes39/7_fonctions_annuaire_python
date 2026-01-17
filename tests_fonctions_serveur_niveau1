@@ -13,7 +13,7 @@ def test_create_user():
         },
         token = "USER_TOKEN"
     )
-    ) == pdu_403("USER_TOKEN")
+    ) == pdu_403("USER_TOKEN", "administrateur requis")
 
     assert CREATE_USER(
     PDU_Requete(
@@ -50,8 +50,91 @@ def test_create_user():
     )
     ) == pdu_409("ADMIN_TOKEN")
 
+def test_add_contact():
+
+    assert ADD_CONTACT(
+    PDU_Requete(
+        action="ADD_CONTACT",
+        data={
+            "nomAnnuaire": "Loay",
+            "nom": "Talley",
+            "prenom": "Emma",
+            "numTel": "+1 213 555-0123",
+            "adressePostal": "obs2016",
+            "adresseMail": "emmatalley2016@gmail.com"
+        },
+        token = ""
+    )
+    ) == pdu_401("") 
+
+    assert ADD_CONTACT(
+    PDU_Requete(
+        action="ADD_CONTACT",
+        data={
+            "nomAnnuaire": "Loay",
+            "nom": "",
+            "prenom": "",
+            "numTel": "+1 213 555-0123",
+            "adressePostal": "obs2016",
+            "adresseMail": ""
+        },
+        token = "USER_TOKEN"
+    )
+    ) == pdu_400("USER_TOKEN") 
+
+    assert ADD_CONTACT(
+    PDU_Requete(
+        action="ADD_CONTACT",
+        data={
+            "nomAnnuaire": "Loay",
+            "nom": "",
+            "prenom": "",
+            "numTel": "+1 213 555-0123",
+            "adressePostal": "obs2016",
+            "adresseMail": "emmatalley@2016.com"
+        },
+        token = "USER_TOKEN"
+    )
+    ) == pdu_400("USER_TOKEN")
+
+    assert ADD_CONTACT(
+    PDU_Requete(
+        action="ADD_CONTACT",
+        data={
+            "nomAnnuaire": "K",
+            "nom": "Talley",
+            "prenom": "Emma",
+            "numTel": "+1 213 555-0123",
+            "adressePostal": "obs2016",
+            "adresseMail": "emmatalley@2016.com"
+        },
+        token = "USER_TOKEN"
+    )
+    ) == pdu_403("USER_TOKEN", "Tu n'as pas accès à K ")
+
+    assert ADD_CONTACT(
+    PDU_Requete(
+        action="ADD_CONTACT",
+        data={
+            "nomAnnuaire": "E",
+            "nom": "Talley",
+            "prenom": "Emma",
+            "numTel": "+1 213 555-0123",
+            "adressePostal": "obs2016",
+            "adresseMail": "emmatalley@2016.com"
+        },
+        token = "USER_TOKEN"
+    )
+    ) == pdu_201("USER_TOKEN") 
+ 
 if __name__ == "__main__":
-    test_create_user()
+
+    print("test_create_user")
+    #test_create_user()
     print("Test OK")
+    print("test_add_contact")
+    test_add_contact()
+    print("Test OK")
+
 
 

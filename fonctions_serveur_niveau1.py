@@ -17,9 +17,9 @@ def CREATE_USER(pdu_recu: PDU_Requete) -> PDU_Reponse:
 
     '''
     Args : 
-    pdu_recu : le client appelle la fonction avec cette pdu 
+    pdu_recu : le user (admin ou client) appelle la fonction avec cette pdu 
     Returns : 
-    pdu_reponse : le client reçoit une réponse montrant l'action faite comme résultat 
+    pdu_reponse : le user reçoit une réponse montrant l'action faite comme résultat 
 
     '''
 
@@ -28,7 +28,7 @@ def CREATE_USER(pdu_recu: PDU_Requete) -> PDU_Reponse:
 
     # Étape 1 : autorisation
     if not est_administrateur(token):
-        return pdu_403(token)
+        return pdu_403(token, "administrateur requis")
 
     # Étape 2 : validation des données
     champs_obligatoires = ["username", "password", "role"]
@@ -52,4 +52,22 @@ def CREATE_USER(pdu_recu: PDU_Requete) -> PDU_Reponse:
     # Étape 5 : succès
     return pdu_201(token)
 
+def ADD_CONTACT(pdu_recu: PDU_Requete) -> PDU_Reponse: 
 
+    '''
+    Args : 
+    pdu_recu : le user (client plus souvent mais ça peut être admin aussi) appelle la fonction avec cette pdu 
+    Returns : 
+    pdu_reponse : le user reçoit une réponse montrant l'action faite comme résultat 
+    '''
+    token = pdu_recu.token
+    data = pdu_recu.data
+
+    if token == "": 
+        return pdu_401(token)
+    
+    if not verifier_champs_obligatoires(data): 
+        return pdu_400(token)
+
+    
+    

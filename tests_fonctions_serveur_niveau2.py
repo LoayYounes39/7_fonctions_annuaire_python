@@ -43,6 +43,8 @@ def test_est_administrateur():
     assert(est_administrateur("ADMIN_TOKEN") == True)
     print("test ok")
 
+
+
 if __name__ == "__main__":
     test_add_user()
     test_user_exists()

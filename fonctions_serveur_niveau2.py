@@ -79,13 +79,13 @@ def pdu_400(token):
         token=token
     )
 
-def pdu_403(token):
+def pdu_403(token, message):
     '''
     Erreur 403 Accès refusé
     '''
     return PDU_Reponse(
         status=403,
-        message="Accès refusé : administrateur requis",
+        message="Accès refusé : " + message,
         data=None,
         token=token
     )
@@ -130,3 +130,17 @@ def sont_donnees_utilisateur_invalides(data, champs_obligatoires):
 
 def est_administrateur(token):
     return token == "ADMIN_TOKEN"
+
+def pdu_401(token): 
+    """
+    le message quand on ne sait pas qui se connecte
+    """
+    return PDU_Reponse(
+        status=401,
+        message="Non authentifié",
+        data=None,
+        token=token
+    ) 
+
+def verifier_champs_obligatoires(data): 
+    return data["nom"] != "" and data["prenom"] != "" and data["adresseMail"] != "" and data["nomAnnuaire"] != ""
