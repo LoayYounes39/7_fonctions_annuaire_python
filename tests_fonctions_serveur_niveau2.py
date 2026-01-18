@@ -51,11 +51,25 @@ def test_est_Annuaire_Partage():
     assert(est_Annuaire_Partage(pdu2.data, "Loay") == True )
     print("test ok")
 
+def test_contact_exists():
+    print("test_contact_exists")
+    assert(contact_exists("emmatalley2016@gmail.com", "annuaire_Test.csv")) == True 
+    assert(contact_exists("hassanshakoosh@nashaz.com", "annuaire_Test.csv")) == False
+    print("test_ok")
+
+def test_ajouter_contact(): 
+    ajouter_contact({"nom": "Shakoosh", "prenom": "Hassan", "adresseMail": "hassanshakoosh@nashaz.com", 
+                     "numTel": "012XXXXXXX", "adressePostale": "Camp Chizar" }, "annuaire_Test.csv")
+    assert(contact_exists("hassanshakoosh@nashaz.com", "annuaire_Test.csv")) == True
+
+
 if __name__ == "__main__":
     test_add_user()
     test_user_exists()
     test_sont_donnees_utilisateur_invalides()
     test_est_administrateur()
     test_est_Annuaire_Partage()
+    test_contact_exists()
+    test_ajouter_contact()
     
     

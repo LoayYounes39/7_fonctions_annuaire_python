@@ -74,7 +74,7 @@ def ADD_CONTACT(pdu_recu: PDU_Requete) -> PDU_Reponse:
     if not est_Annuaire_Partage(data, CURRENT_USER): 
         return pdu_403(token, f" Tu n'as pas accès à {data["nomAnnuaire"]}" )
 
-    if contact_exists(data["username"], f"annuaire_{data["nomAnnuaire"]}.csv"): 
+    if contact_exists(data["adresseMail"], f"annuaire_{data["nomAnnuaire"]}.csv"): 
         return pdu_409(token, "contact déjà existant")
     
     try: 

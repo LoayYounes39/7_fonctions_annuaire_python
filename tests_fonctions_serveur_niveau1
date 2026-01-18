@@ -111,8 +111,19 @@ def test_add_contact():
         token = "USER_TOKEN"
     )
     ) == pdu_403("USER_TOKEN", " Tu n'as pas accès à K")
-    """
     
+    print(PDU_Requete(
+        action="ADD_CONTACT",
+        data={
+            "nomAnnuaire": "E",
+            "nom": "Talley",
+            "prenom": "Emma",
+            "numTel": "+1 213 555-0123",
+            "adressePostal": "obs2016",
+            "adresseMail": "emmatalley@2016.com"
+        },
+        token = "USER_TOKEN"
+    ))
     assert ADD_CONTACT(
     PDU_Requete(
         action="ADD_CONTACT",
@@ -142,7 +153,7 @@ def test_add_contact():
         token = "USER_TOKEN"
     )
     ) == pdu_409("USER_TOKEN", "contact déjà existant")
- """
+
 if __name__ == "__main__":
 
     print("test_create_user")

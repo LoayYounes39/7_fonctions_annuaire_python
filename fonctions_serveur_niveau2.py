@@ -1,6 +1,7 @@
 import csv
 from dataclasses import dataclass
 import hashlib
+import os
 from typing import Dict, Optional
 
 
@@ -156,3 +157,46 @@ def est_Annuaire_Partage(data, current_user):
                 tab_permis = ligne["utilisateursPermis"].split(",")
                 est_Permis = current_user in tab_permis
     return est_Permis
+
+#gpt à partir des tests que j'ai générés
+def contact_exists(email: str, filename: str) -> bool:
+    if not os.path.exists(filename):
+        #print("fichier pas trouvé ")
+        return False
+
+    email = email.strip().lower()
+
+    with open(filename, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f, delimiter=";")
+        for row in reader:
+            #print(row["adresseMail"].strip().lower())
+            if row["adresseMail"].strip().lower() == email:
+                return True
+    return False
+
+#gpt à partir des tests que j'ai générés
+import csv
+import os
+
+def ajouter_contact(data: dict, nom_fic: str) -> None:
+    fieldnames = [
+        "nom",
+        "prenom",
+        "adresseMail",
+        "numTel",
+        "adressePostale"
+    ]
+
+    write_header = not os.path.exists(nom_fic) or os.path.getsize(nom_fic) == 0
+
+    with open(nom_fic, "a", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter=";")
+
+        if write_header:
+            writer.writeheader()
+
+        # filtrage strict : seulement les champs autorisés
+        row = {key: data.get(key, "") for key in fieldnames}
+
+        writer.writerow(row)
+
