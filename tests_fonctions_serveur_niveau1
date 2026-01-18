@@ -49,6 +49,7 @@ def test_create_user():
         token = "ADMIN_TOKEN"
     )
     ) == pdu_409("ADMIN_TOKEN", "utilisateur déjà existant")
+open("users.csv", "w").close()
 
 def test_add_contact():
 
@@ -112,6 +113,7 @@ def test_add_contact():
     )
     ) == pdu_403("USER_TOKEN", " Tu n'as pas accès à K")
     
+    """
     print(PDU_Requete(
         action="ADD_CONTACT",
         data={
@@ -124,6 +126,7 @@ def test_add_contact():
         },
         token = "USER_TOKEN"
     ))
+    """
     assert ADD_CONTACT(
     PDU_Requete(
         action="ADD_CONTACT",
@@ -153,11 +156,13 @@ def test_add_contact():
         token = "USER_TOKEN"
     )
     ) == pdu_409("USER_TOKEN", "contact déjà existant")
+open("annuaire_E.csv", "w").close()
+
 
 if __name__ == "__main__":
 
     print("test_create_user")
-    #test_create_user()
+    test_create_user()
     print("Test OK")
     print("test_add_contact")
     test_add_contact()

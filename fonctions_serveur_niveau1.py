@@ -51,7 +51,7 @@ def CREATE_USER(pdu_recu: PDU_Requete) -> PDU_Reponse:
         except: 
            return pdu_500(token)
     # Étape 5 : succès
-    return pdu_201(token)
+    return pdu_201(token, "utilisateur ajouté par succès")
 
 def ADD_CONTACT(pdu_recu: PDU_Requete) -> PDU_Reponse: 
 

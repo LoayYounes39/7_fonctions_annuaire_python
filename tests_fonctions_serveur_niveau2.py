@@ -59,8 +59,8 @@ def test_contact_exists():
 
 def test_ajouter_contact(): 
     ajouter_contact({"nom": "Shakoosh", "prenom": "Hassan", "adresseMail": "hassanshakoosh@nashaz.com", 
-                     "numTel": "012XXXXXXX", "adressePostale": "Camp Chizar" }, "annuaire_Test.csv")
-    assert(contact_exists("hassanshakoosh@nashaz.com", "annuaire_Test.csv")) == True
+                     "numTel": "012XXXXXXX", "adressePostale": "Camp Chizar" }, "annuaire_Test2.csv")
+    assert(contact_exists("hassanshakoosh@nashaz.com", "annuaire_Test2.csv")) == True
 
 
 if __name__ == "__main__":
